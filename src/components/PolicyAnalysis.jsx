@@ -10,7 +10,7 @@ import {
   Download,
   Share2
 } from 'lucide-react';
-import { generatePolicyAnalysis } from '../services/aiService';
+import analysisPipeline from '../services/analysisPipeline.js';
 
 const PolicyAnalysis = ({ policy, onComplete, onBack }) => {
   const [loading, setLoading] = useState(true);
@@ -27,20 +27,41 @@ const PolicyAnalysis = ({ policy, onComplete, onBack }) => {
 
   useEffect(() => {
     const runAnalysis = async () => {
-      // Simulate step-by-step analysis
-      for (let i = 0; i < analysisSteps.length; i++) {
-        setAnalysisStep(i);
-        await new Promise(resolve => setTimeout(resolve, analysisSteps[i].duration));
-      }
-
-      // Generate AI analysis
       try {
-        const analysisResults = await generatePolicyAnalysis(policy);
-        setAnalysis(analysisResults);
-        setLoading(false);
-        onComplete(analysisResults);
+        // Create a mock file object from policy data if no actual file
+        const mockFile = policy.fileName ? null : new File(
+          [JSON.stringify(policy)], 
+          'policy-data.json', 
+          { type: 'application/json' }
+        );
+
+        // Run enhanced analysis pipeline
+        const pipelineResult = await analysisPipeline.executeAnalysis(
+          mockFile,
+          policy,
+          {}, // User profile - could be passed from parent
+          (progress) => {
+            // Update progress based on pipeline stage
+            const stageIndex = analysisSteps.findIndex(step => 
+              step.label.toLowerCase().includes(progress.stage.replace('_', ' '))
+            );
+            if (stageIndex >= 0) {
+              setAnalysisStep(stageIndex);
+            }
+          }
+        );
+
+        if (pipelineResult.success) {
+          // Convert comprehensive result to expected format
+          const analysisResults = convertPipelineResult(pipelineResult.result);
+          setAnalysis(analysisResults);
+          setLoading(false);
+          onComplete(analysisResults);
+        } else {
+          throw new Error(pipelineResult.error || 'Analysis pipeline failed');
+        }
       } catch (error) {
-        console.error('Analysis failed:', error);
+        console.error('Enhanced analysis failed:', error);
         // Use mock data as fallback
         const mockAnalysis = generateMockAnalysis(policy);
         setAnalysis(mockAnalysis);
@@ -51,6 +72,52 @@ const PolicyAnalysis = ({ policy, onComplete, onBack }) => {
 
     runAnalysis();
   }, [policy]);
+
+  const convertPipelineResult = (comprehensiveResult) => {
+    // Convert comprehensive analysis result to expected UI format
+    const aiAnalysis = comprehensiveResult.aiAnalysis || {};
+    const riskAnalysis = comprehensiveResult.riskAnalysis || {};
+    
+    return {
+      summary: {
+        overallRating: comprehensiveResult.overallRating || 'B+',
+        coverageScore: comprehensiveResult.overallScore || 78,
+        riskLevel: riskAnalysis.riskLevel || 'Medium',
+        recommendations: comprehensiveResult.prioritizedRecommendations?.length || 3
+      },
+      keyFindings: (riskAnalysis.riskFactors || []).slice(0, 3).map(risk => ({
+        type: risk.type || 'gap',
+        severity: risk.severity || 'medium',
+        title: risk.title || 'Risk Identified',
+        description: risk.description || 'Risk analysis completed',
+        recommendation: risk.recommendation || 'Review recommended'
+      })),
+      coverageBreakdown: aiAnalysis.coverageBreakdown || [
+        { category: 'Primary Coverage', current: 'Analyzed', recommended: 'Review needed', status: 'review' },
+        { category: 'Deductible', current: 'Analyzed', recommended: 'Optimize', status: 'optimize' },
+        { category: 'Additional Coverage', current: 'Analyzed', recommended: 'Assess needs', status: 'assess' }
+      ],
+      recommendations: (comprehensiveResult.prioritizedRecommendations || []).slice(0, 3).map(rec => ({
+        priority: rec.priority || 'medium',
+        title: rec.title || 'Review Policy',
+        impact: rec.impact || 'Improved coverage',
+        costImpact: rec.costImpact || 'Varies',
+        description: rec.description || 'Policy review recommended'
+      })),
+      nextSteps: comprehensiveResult.actionPlan?.map(action => action.title) || [
+        'Review detailed analysis report',
+        'Contact insurance provider for clarifications',
+        'Compare with alternative providers',
+        'Schedule annual policy review'
+      ],
+      enhancedData: {
+        comprehensiveResult,
+        confidence: comprehensiveResult.confidence || 75,
+        completeness: comprehensiveResult.completeness || 80,
+        keyInsights: comprehensiveResult.keyInsights || []
+      }
+    };
+  };
 
   const generateMockAnalysis = (policy) => {
     return {
