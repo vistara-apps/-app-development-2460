@@ -53,14 +53,14 @@ const Hero = ({ onGetStarted, onViewDashboard }) => {
             <span>AI-Powered Insurance Analysis</span>
           </div>
           
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-4xl md:text-6xl font-bold text-secondary-900 mb-6 leading-tight">
             Unlock the hidden insights in your{' '}
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-gradient">
               insurance policies
             </span>
           </h1>
           
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-secondary-600 mb-8 max-w-3xl mx-auto leading-relaxed">
             PolicyAI analyzes your insurance policies in 30 seconds, identifies coverage gaps and risks, 
             and provides personalized recommendations to optimize your protection.
           </p>
@@ -68,14 +68,14 @@ const Hero = ({ onGetStarted, onViewDashboard }) => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
             <button 
               onClick={onGetStarted}
-              className="btn btn-primary text-lg px-8 py-3 pulse-glow"
+              className="btn btn-primary btn-lg pulse-glow"
             >
               <Brain className="w-5 h-5 mr-2" />
               Analyze Your Policy Now
             </button>
             <button 
               onClick={onViewDashboard}
-              className="btn btn-secondary text-lg px-8 py-3"
+              className="btn btn-outline btn-lg"
             >
               View Dashboard
               <ArrowRight className="w-5 h-5 ml-2" />
@@ -84,17 +84,17 @@ const Hero = ({ onGetStarted, onViewDashboard }) => {
 
           {/* Quick Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600 mb-2">30s</div>
-              <div className="text-gray-600">Analysis Time</div>
+            <div className="text-center fade-in" style={{ animationDelay: '200ms' }}>
+              <div className="text-4xl font-bold text-primary-600 mb-2">30s</div>
+              <div className="text-secondary-600 font-medium">Analysis Time</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-green-600 mb-2">94%</div>
-              <div className="text-gray-600">Coverage Issues Found</div>
+            <div className="text-center fade-in" style={{ animationDelay: '300ms' }}>
+              <div className="text-4xl font-bold text-success-600 mb-2">94%</div>
+              <div className="text-secondary-600 font-medium">Coverage Issues Found</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600 mb-2">$2.3K</div>
-              <div className="text-gray-600">Average Savings</div>
+            <div className="text-center fade-in" style={{ animationDelay: '400ms' }}>
+              <div className="text-4xl font-bold text-accent-600 mb-2">$2.3K</div>
+              <div className="text-secondary-600 font-medium">Average Savings</div>
             </div>
           </div>
         </div>
@@ -104,41 +104,43 @@ const Hero = ({ onGetStarted, onViewDashboard }) => {
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <div key={index} className="card text-center hover:shadow-xl">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <Icon className="w-6 h-6 text-white" />
+              <div key={index} className="card card-hover text-center p-6 fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+                <div className="w-14 h-14 bg-gradient-accent rounded-xl flex items-center justify-center mx-auto mb-4 shadow-medium">
+                  <Icon className="w-7 h-7 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+                <h3 className="text-lg font-semibold text-secondary-900 mb-3">{feature.title}</h3>
+                <p className="text-secondary-600 leading-relaxed">{feature.description}</p>
               </div>
             );
           })}
         </div>
 
         {/* Benefits Section */}
-        <div className="card max-w-4xl mx-auto">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+        <div className="card card-elevated max-w-4xl mx-auto p-8">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold text-secondary-900 mb-4">
               Why Choose PolicyAI?
             </h2>
-            <p className="text-gray-600">
+            <p className="text-secondary-600 text-lg">
               Transform how you understand and manage your insurance policies
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
             {benefits.map((benefit, index) => (
-              <div key={index} className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                <span className="text-gray-700">{benefit}</span>
+              <div key={index} className="flex items-start space-x-4 fade-in" style={{ animationDelay: `${index * 50}ms` }}>
+                <div className="flex-shrink-0 w-6 h-6 bg-success-100 rounded-full flex items-center justify-center mt-0.5">
+                  <CheckCircle className="w-4 h-4 text-success-600" />
+                </div>
+                <span className="text-secondary-700 leading-relaxed">{benefit}</span>
               </div>
             ))}
           </div>
 
-          <div className="mt-8 text-center">
+          <div className="text-center">
             <button 
               onClick={onGetStarted}
-              className="btn btn-primary text-lg px-8 py-3"
+              className="btn btn-primary btn-lg"
             >
               Get Started - It's Free
             </button>
