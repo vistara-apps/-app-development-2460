@@ -7,49 +7,72 @@ const SubscriptionModal = ({ onClose, onSubscribe }) => {
 
   const plans = [
     {
-      id: 'pro',
-      name: 'Pro',
-      price: '$19',
+      id: 'personal-pro',
+      name: 'Personal Pro',
+      price: '$29',
       period: '/month',
-      description: 'Perfect for individuals and small families',
+      description: 'Perfect for individuals and families',
       icon: Crown,
       color: 'blue',
       features: [
-        'Analyze up to 10 policies per month',
-        'Basic risk assessment',
-        'Coverage gap identification',
-        'Email support',
-        'Policy renewal reminders',
-        'Basic recommendations'
+        'Analyze up to 5 policies per month',
+        'Advanced AI insights',
+        'Renewal reminders',
+        'Savings recommendations',
+        'Priority email support',
+        'Mobile app access'
       ],
-      popular: false
+      popular: false,
+      savings: 'Save vs $9.99 per analysis'
     },
     {
-      id: 'premium',
-      name: 'Premium',
-      price: '$49',
+      id: 'business-pro',
+      name: 'Business Pro',
+      price: '$79',
       period: '/month',
-      description: 'Best for businesses and insurance professionals',
+      description: 'Ideal for small businesses and teams',
       icon: Star,
       color: 'purple',
       features: [
-        'Unlimited policy analysis',
-        'Advanced AI insights',
-        'Competitive market analysis',
-        'Priority support',
-        'Custom reporting',
-        'API access',
-        'White-label options',
-        'Team collaboration tools'
+        'Analyze up to 20 policies per month',
+        'Multi-policy management',
+        'Team collaboration (up to 5 users)',
+        'Business risk assessment',
+        'Compliance tracking',
+        'Phone support',
+        'Custom reporting'
       ],
-      popular: true
+      popular: true,
+      savings: 'Most popular choice'
+    },
+    {
+      id: 'professional',
+      name: 'Professional',
+      price: '$149',
+      period: '/month',
+      description: 'For insurance agents and brokers',
+      icon: Zap,
+      color: 'green',
+      features: [
+        'Analyze up to 100 policies per month',
+        'Client management dashboard',
+        'White-label reports',
+        'Limited API access',
+        'Lead generation tools',
+        'Priority support',
+        'Training resources'
+      ],
+      popular: false,
+      savings: 'Best for professionals'
     }
   ];
 
   const handleSubscribe = async (planId) => {
     try {
-      await createSession();
-      onSubscribe(planId);
+      const result = await createSession(planId, 'monthly');
+      if (result.success) {
+        onSubscribe(planId);
+      }
     } catch (error) {
       console.error('Payment failed:', error);
       alert('Payment failed. Please try again.');
@@ -81,7 +104,7 @@ const SubscriptionModal = ({ onClose, onSubscribe }) => {
 
         {/* Plans */}
         <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {plans.map((plan) => {
               const Icon = plan.icon;
               const isPopular = plan.popular;
@@ -107,6 +130,8 @@ const SubscriptionModal = ({ onClose, onSubscribe }) => {
                     <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 ${
                       plan.color === 'purple' 
                         ? 'bg-gradient-to-br from-purple-500 to-blue-500' 
+                        : plan.color === 'green'
+                        ? 'bg-gradient-to-br from-green-500 to-emerald-500'
                         : 'bg-gradient-to-br from-blue-500 to-indigo-500'
                     }`}>
                       <Icon className="w-6 h-6 text-white" />
@@ -115,10 +140,18 @@ const SubscriptionModal = ({ onClose, onSubscribe }) => {
                     <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
                     <p className="text-gray-600 mb-4">{plan.description}</p>
                     
-                    <div className="flex items-end justify-center mb-4">
+                    <div className="flex items-end justify-center mb-2">
                       <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
                       <span className="text-gray-600 ml-1">{plan.period}</span>
                     </div>
+                    
+                    {plan.savings && (
+                      <div className="text-center mb-4">
+                        <span className="text-sm text-green-600 font-medium bg-green-50 px-2 py-1 rounded-full">
+                          {plan.savings}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   <div className="space-y-3 mb-6">
