@@ -105,30 +105,33 @@ const PolicyUpload = ({ onUpload, subscriptionStatus, onUpgradeRequired }) => {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="text-center mb-10 fade-in">
+        <h1 className="text-4xl font-bold text-secondary-900 mb-4">
           Upload Your Insurance Policy
         </h1>
-        <p className="text-gray-600 max-w-2xl mx-auto">
+        <p className="text-xl text-secondary-600 max-w-3xl mx-auto leading-relaxed">
           Upload your policy document and provide some basic details. 
           Our AI will analyze it in 30 seconds to identify risks, gaps, and optimization opportunities.
         </p>
       </div>
 
       {!canUpload && (
-        <div className="card mb-8 border-l-4 border-yellow-400 bg-yellow-50">
-          <div className="flex items-center">
-            <Crown className="w-6 h-6 text-yellow-600 mr-3" />
-            <div>
-              <h3 className="text-lg font-medium text-yellow-800">Upgrade Required</h3>
-              <p className="text-yellow-700">
-                You've reached the upload limit for free accounts. Upgrade to continue analyzing policies.
+        <div className="card card-bordered mb-8 border-l-4 border-warning-400 bg-warning-50 p-6 slide-up">
+          <div className="flex items-start space-x-4">
+            <div className="flex-shrink-0 w-10 h-10 bg-warning-100 rounded-full flex items-center justify-center">
+              <Crown className="w-5 h-5 text-warning-600" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-warning-800 mb-2">Upgrade Required</h3>
+              <p className="text-warning-700 mb-4 leading-relaxed">
+                You've reached the upload limit for free accounts. Upgrade to continue analyzing policies and unlock advanced features.
               </p>
               <button 
                 onClick={onUpgradeRequired}
-                className="btn btn-primary mt-3"
+                className="btn btn-warning btn-md"
               >
+                <Crown className="w-4 h-4 mr-2" />
                 Upgrade Now
               </button>
             </div>
@@ -138,16 +141,21 @@ const PolicyUpload = ({ onUpload, subscriptionStatus, onUpgradeRequired }) => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* File Upload Section */}
-        <div className="card">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            1. Upload Policy Document
-          </h2>
+        <div className="card card-hover p-6 slide-up" style={{ animationDelay: '100ms' }}>
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
+              <span className="text-primary-600 font-semibold text-sm">1</span>
+            </div>
+            <h2 className="text-xl font-semibold text-secondary-900">
+              Upload Policy Document
+            </h2>
+          </div>
           
           <div
-            className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 ${
+            className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${
               dragActive 
-                ? 'border-blue-400 bg-blue-50' 
-                : 'border-gray-300 hover:border-blue-400'
+                ? 'border-primary-400 bg-primary-50 scale-105' 
+                : 'border-secondary-300 hover:border-primary-400 hover:bg-primary-50/50'
             } ${!canUpload ? 'opacity-50 pointer-events-none' : ''}`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
@@ -164,33 +172,39 @@ const PolicyUpload = ({ onUpload, subscriptionStatus, onUpgradeRequired }) => {
             
             {uploading ? (
               <div className="flex flex-col items-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-                <p className="mt-4 text-gray-600">Processing your policy...</p>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+                <p className="mt-4 text-secondary-600 font-medium">Processing your policy...</p>
               </div>
             ) : uploadedFile ? (
-              <div className="flex flex-col items-center">
-                <CheckCircle className="w-12 h-12 text-green-500 mb-4" />
-                <p className="text-green-700 font-medium">{uploadedFile.name}</p>
-                <p className="text-gray-500 text-sm">
-                  {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB
+              <div className="flex flex-col items-center scale-in">
+                <div className="w-16 h-16 bg-success-100 rounded-full flex items-center justify-center mb-4">
+                  <CheckCircle className="w-8 h-8 text-success-600" />
+                </div>
+                <p className="text-success-700 font-semibold text-lg mb-1">{uploadedFile.name}</p>
+                <p className="text-secondary-500 text-sm">
+                  {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB • Ready for analysis
                 </p>
               </div>
             ) : (
               <div className="flex flex-col items-center">
-                <Upload className="w-12 h-12 text-gray-400 mb-4" />
-                <p className="text-gray-600 mb-2">
+                <div className="w-16 h-16 bg-secondary-100 rounded-full flex items-center justify-center mb-4">
+                  <Upload className="w-8 h-8 text-secondary-400" />
+                </div>
+                <p className="text-secondary-700 mb-2 font-medium text-lg">
                   Drag and drop your policy document here, or click to browse
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-secondary-500">
                   Supports PDF, DOC, DOCX, TXT files up to 10MB
                 </p>
               </div>
             )}
           </div>
 
-          <div className="mt-4 flex items-start space-x-2 text-sm text-gray-600">
-            <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-            <p>
+          <div className="mt-6 flex items-start space-x-3 text-sm text-secondary-600 bg-secondary-50 rounded-lg p-4">
+            <div className="flex-shrink-0 w-5 h-5 bg-secondary-200 rounded-full flex items-center justify-center mt-0.5">
+              <AlertCircle className="w-3 h-3 text-secondary-500" />
+            </div>
+            <p className="leading-relaxed">
               Your documents are processed securely and not stored permanently. 
               We only extract necessary information for analysis.
             </p>
@@ -198,14 +212,19 @@ const PolicyUpload = ({ onUpload, subscriptionStatus, onUpgradeRequired }) => {
         </div>
 
         {/* Policy Details Form */}
-        <div className="card">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            2. Policy Details
-          </h2>
+        <div className="card card-hover p-6 slide-up" style={{ animationDelay: '200ms' }}>
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
+              <span className="text-primary-600 font-semibold text-sm">2</span>
+            </div>
+            <h2 className="text-xl font-semibold text-secondary-900">
+              Policy Details
+            </h2>
+          </div>
           
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="form-label">
                 Policy Number
               </label>
               <input
@@ -215,10 +234,11 @@ const PolicyUpload = ({ onUpload, subscriptionStatus, onUpgradeRequired }) => {
                 className="form-input"
                 placeholder="POL123456789"
               />
+              <p className="form-help">Enter your policy number as shown on your documents</p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="form-label">
                 Coverage Type
               </label>
               <select
@@ -232,10 +252,11 @@ const PolicyUpload = ({ onUpload, subscriptionStatus, onUpgradeRequired }) => {
                   </option>
                 ))}
               </select>
+              <p className="form-help">Select the type of insurance coverage</p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="form-label">
                 Insurance Provider
               </label>
               <input
@@ -245,11 +266,12 @@ const PolicyUpload = ({ onUpload, subscriptionStatus, onUpgradeRequired }) => {
                 className="form-input"
                 placeholder="e.g., State Farm, Allstate, Progressive"
               />
+              <p className="form-help">Name of your insurance company</p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="form-label">
                   Coverage Limits
                 </label>
                 <input
@@ -259,10 +281,11 @@ const PolicyUpload = ({ onUpload, subscriptionStatus, onUpgradeRequired }) => {
                   className="form-input"
                   placeholder="$100,000"
                 />
+                <p className="form-help">Maximum coverage amount</p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="form-label">
                   Deductible
                 </label>
                 <input
@@ -272,11 +295,12 @@ const PolicyUpload = ({ onUpload, subscriptionStatus, onUpgradeRequired }) => {
                   className="form-input"
                   placeholder="$1,000"
                 />
+                <p className="form-help">Amount you pay before coverage kicks in</p>
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="form-label">
                 Renewal Date
               </label>
               <input
@@ -285,17 +309,20 @@ const PolicyUpload = ({ onUpload, subscriptionStatus, onUpgradeRequired }) => {
                 onChange={(e) => setPolicyDetails({...policyDetails, renewalDate: e.target.value})}
                 className="form-input"
               />
+              <p className="form-help">When your policy expires and needs renewal</p>
             </div>
 
-            <button
-              type="submit"
-              disabled={!uploadedFile || uploading}
-              className="btn btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <FileText className="w-5 h-5 mr-2" />
-              Analyze Policy
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </button>
+            <div className="pt-4">
+              <button
+                type="submit"
+                disabled={!uploadedFile || uploading}
+                className="btn btn-primary btn-lg w-full"
+              >
+                <FileText className="w-5 h-5 mr-2" />
+                Analyze Policy
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </button>
+            </div>
           </form>
         </div>
       </div>
